@@ -9,9 +9,9 @@ insert txt, csv, xls, xlsx data into database
 
 how to use    
 
-add file to import on page.  
+add files to import on page.  
 file name without extension will be table name.  
-target table should be create manually before start import.  
+target table should be created manually before start import.  
 
 
 
@@ -20,11 +20,4 @@ this project was built on below settings
 openjdk-17.0.3  
 Kotlin 1.7.22
 springboot 3.0.1  
-Node.js v18.12.1.  
-SvelteKit 1.0  
 IntelliJ IDEA 2022.3.1  
-    
-run on Intellij  
-  
-cd svelte  
-npm run dev -- --open  
