@@ -20,11 +20,4 @@ this project was built on below settings
 openjdk-17.0.3  
 Kotlin 1.7.22
 springboot 3.0.1  
-Node.js v18.12.1.  
-SvelteKit 1.0  
 IntelliJ IDEA 2022.3.1  
-    
-run on Intellij  
-  
-cd svelte  
-npm run dev
