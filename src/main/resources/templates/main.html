@@ -5,6 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+
+<form id="file_form" method="post" enctype="multipart/form-data" action=""/>
+    <input id="file_input" multiple type="file" accept=".txt,.csv,.xls,.xlsx"/>
+</form>
+
 <table id="userTable" class="data-grid">
     <thead>
     <tr>
@@ -15,15 +20,19 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${userList}">
-        <td th:text="${user.email}">emil</td>
-        <td th:text="${user.fullNmKr}">name</td>
-        <td th:text="${user.userStatCd}">stat</td>
-        <td th:text="${user.superUser}">super</td>
+    <tr th:each="user : ${file}">
+        <td th:text="${file.file_name}">file name</td>
+        <td th:text="${file}">file size</td>
+        <td th:text="${user.fullNmKr}">data count</td>
+        <td th:text="${user.fullNmKr}">upload count</td>
     </tr>
     </tbody>
 </table>
+
+
 </body>
+
+
 </html>
 
 <style>
@@ -45,3 +54,6 @@
 
 
 </style>
+
+<script type="text/javascript" src="jquery-3.6.3.js"/>
+<!--<script type="text/javascript" src="/templates/main.js"/>-->
