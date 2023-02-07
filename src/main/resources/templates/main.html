@@ -1,59 +1,55 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Hello</title>
+    <title>qwerty</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <style>
+    .data-grid {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-grid th,
+    .data-grid td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .data-grid th {
+      background-color: lightgray;
+    }
+    </style>
 </head>
 <body>
 
-<form id="file_form" method="post" enctype="multipart/form-data" action=""/>
+<form id="file_form" method="post" enctype="multipart/form-data"/>
     <input id="file_input" multiple type="file" accept=".txt,.csv,.xls,.xlsx"/>
 </form>
+
+<br>
 
 <table id="userTable" class="data-grid">
     <thead>
     <tr>
-        <th>Email</th>
-        <th>Name</th>
-        <th>User Status</th>
-        <th>Super User</th>
+        <th>file name</th>
+        <th>file size</th>
+        <th>data count</th>
+        <th>upload count</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user : ${file}">
         <td th:text="${file.file_name}">file name</td>
-        <td th:text="${file}">file size</td>
-        <td th:text="${user.fullNmKr}">data count</td>
-        <td th:text="${user.fullNmKr}">upload count</td>
+        <td th:text="${file.file_size}">file size</td>
+        <td th:text="${file.data_count}">data count</td>
+        <td th:text="${file.upload_count}">upload count</td>
     </tr>
     </tbody>
 </table>
 
-
+<script type="text/javascript" src="./jquery-3.6.3.js"></script>
+<script type="text/javascript" src="./main.js"></script>
 </body>
-
-
 </html>
-
-<style>
-.data-grid {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.data-grid th,
-.data-grid td {
-  border: 1px solid black;
-  padding: 8px;
-  text-align: left;
-}
-
-.data-grid th {
-  background-color: lightgray;
-}
-
-
-</style>
-
-<script type="text/javascript" src="jquery-3.6.3.js"/>
-<!--<script type="text/javascript" src="/templates/main.js"/>-->

@@ -7,10 +7,12 @@ import org.springframework.web.multipart.MultipartFile
 class CommonServiceImpl : CommonService {
     override fun uploadFile(file: MultipartFile?): Map<String, Any> {
 
-        val returnObject : MutableMap<String,Any> = HashMap();
-        returnObject["status"] = "SUCCESS"
-        returnObject["statusDescription"] = "성공!";
+        val returnObject : MutableMap<String,Any> = HashMap()
+        returnObject["file_name"] = "SEX"
+        returnObject["file.size"] = 123456789
+        returnObject["file.data_count"] = 0
+        returnObject["file.upload_count"] = 0
 
-        return returnObject;
+        return returnObject
     }
 }

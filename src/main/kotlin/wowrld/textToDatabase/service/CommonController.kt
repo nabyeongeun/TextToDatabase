@@ -24,10 +24,13 @@ class CommonController {
         return model;
     }
 
-    @GetMapping("/uploadFile.do")
-    fun uploadFile(@RequestParam("file", required=false) file:MultipartFile?) : Map<String,Any> {
+    @PostMapping("/uploadFile.do")
+    fun uploadFile(model: Model, @RequestParam("file") file:MultipartFile) : Map<String,Any> {
 
-        return service.uploadFile(file)
+        val returnObject = service.uploadFile(file);
+
+        model.addAttribute("file", returnObject);
+        return returnObject;
     }
 
 }
