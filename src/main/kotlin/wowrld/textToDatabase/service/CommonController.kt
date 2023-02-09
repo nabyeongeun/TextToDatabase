@@ -25,7 +25,7 @@ class CommonController {
     }
 
     @PostMapping("/uploadFile.do")
-    fun uploadFile(model: Model, @RequestParam("file") file:MultipartFile) : Map<String,Any> {
+    fun uploadFile(model: Model, @RequestParam("file") file:MultipartFile) : Map<String,Any?> {
 
         val returnObject = service.uploadFile(file);
 

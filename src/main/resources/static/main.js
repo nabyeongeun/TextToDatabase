@@ -18,11 +18,14 @@ $(document).ready(function() {
 //  });
 });
 
+let fileList = [];
 
 function file_attach() {
-    let formData = new FormData();
+
     let files = $('#file_input').get(0).files;
+
     for (let i = 0; i < files.length; i++) {
+        let formData = new FormData();
         formData.append("file", files[i]);
         $.ajax({
             url: "/uploadFile.do",
@@ -30,34 +33,36 @@ function file_attach() {
             processData: false,
             data: formData,
             type: 'POST',
-            success: function(response) {
-                console.log(response);
+            success: (response) => {
+
+                fileList.push(response);
+
+                console.log(fileList);
+
+                var newFile = '<tr><td>'
+                    + '<input type="checkbox">' + '</td><td>'
+                    + response.file_name + '</td><td>'
+                    + response.file_size + '</td><td>'
+                    + response.data_count + '</td><td>'
+                    + response.upload_count + '</td><td>'
+                    + "<button onclick=deleteRow('" + response.file_name + "')> C </button> </td></tr>";
+                $("table tbody").append(newFile);
             },
-            error: function() {
-                console.error("File upload failed");
+            error: () => {
+                alert("File upload failed");
             }
         });
     }
 }
 
-//function file_attach() {
-//    let formData = new FormData();
-//    let files = $('#file_input').get(0).files;
-//    files.forEach(function(file) {
-//        formData.append("file_input", file);
-//        let data = formData;
-//        $.ajax({
-//            url: "/uploadFile.do",
-//            contentType: false,
-//            processData: false,
-//            data: data,
-//            type: 'POST',
-//            success: function(response) {
-//                console.log(response);
-//            },
-//            error: function() {
-//                console.error("File upload failed");
-//            }
-//        });
-//    });
-//}
+function deleteRow(fileName) {
+
+    for(let i in fileList) {
+
+        if(fileList[i].file_name == fileName) {
+            fileList.splice(i, 1);
+            $('#'+fileName).remove();
+        }
+    }
+
+}

@@ -33,18 +33,22 @@
 <table id="userTable" class="data-grid">
     <thead>
     <tr>
+        <th></th> <!-- checkbox -->
         <th>file name</th>
         <th>file size</th>
         <th>data count</th>
         <th>upload count</th>
+        <th></th> <!-- button -->
     </tr>
     </thead>
     <tbody>
     <tr th:each="user : ${file}">
+        <td th:text=""><input type="checkbox"></td>
         <td th:text="${file.file_name}">file name</td>
         <td th:text="${file.file_size}">file size</td>
         <td th:text="${file.data_count}">data count</td>
         <td th:text="${file.upload_count}">upload count</td>
+        <td th:text=""><button class="delete-button">C</button></td>
     </tr>
     </tbody>
 </table>
