@@ -1,4 +1,4 @@
-package wowrld.textToDatabase.service.common
+package ttd.textToDatabase.service.common
 
 fun returnSuccess(successMsg: String): Map<String, Any> {
     val returnObject: MutableMap<String, Any> = HashMap()

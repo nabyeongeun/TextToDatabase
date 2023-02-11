@@ -1,4 +1,4 @@
-package wowrld.textToDatabase.service
+package ttd.textToDatabase.service
 
 import org.springframework.web.multipart.MultipartFile
 
