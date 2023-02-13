@@ -10,12 +10,15 @@ class CommonServiceImpl : CommonService {
 
         val fileName = file?.originalFilename
         val fileSize = file?.size
+        val hashCode = file.hashCode()
+
 
         val returnObject : MutableMap<String,Any?> = HashMap()
         returnObject["file_name"] = fileName
         returnObject["file_size"] = fileSizeMeasure(fileSize)
         returnObject["data_count"] = 0
         returnObject["upload_count"] = 0
+        returnObject["hash_code"] = hashCode
 
         return returnObject
     }

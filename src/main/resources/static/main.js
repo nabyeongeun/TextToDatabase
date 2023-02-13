@@ -37,15 +37,15 @@ function file_attach() {
 
                 fileList.push(response);
 
-                console.log(fileList);
+//                console.log(fileList);
 
-                var newFile = '<tr><td>'
+                var newFile = '<tr id="' + response.hash_code + '"><td>'
                     + '<input type="checkbox">' + '</td><td>'
                     + response.file_name + '</td><td>'
                     + response.file_size + '</td><td>'
                     + response.data_count + '</td><td>'
                     + response.upload_count + '</td><td>'
-                    + "<button onclick=deleteRow('" + response.file_name + "')> C </button> </td></tr>";
+                    + "<button onclick=deleteRow('" + response.hash_code + "')> C </button> </td></tr>";
                 $("table tbody").append(newFile);
             },
             error: () => {
@@ -55,13 +55,14 @@ function file_attach() {
     }
 }
 
-function deleteRow(fileName) {
+function deleteRow(id) {
 
     for(let i in fileList) {
 
-        if(fileList[i].file_name == fileName) {
+        if(fileList[i].hash_code == id) {
             fileList.splice(i, 1);
-            $('#'+fileName).remove();
+            console.log('$("#'+id+'").remove()');
+            $('#'+id).remove();
         }
     }
 

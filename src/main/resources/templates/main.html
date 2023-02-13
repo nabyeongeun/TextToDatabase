@@ -44,11 +44,11 @@
     <tbody>
     <tr th:each="user : ${file}">
         <td th:text=""><input type="checkbox"></td>
-        <td th:text="${file.file_name}">file name</td>
-        <td th:text="${file.file_size}">file size</td>
-        <td th:text="${file.data_count}">data count</td>
-        <td th:text="${file.upload_count}">upload count</td>
-        <td th:text=""><button class="delete-button">C</button></td>
+        <td th:text="${file.file_name}"></td>
+        <td th:text="${file.file_size}"></td>
+        <td th:text="${file.data_count}"></td>
+        <td th:text="${file.upload_count}"></td>
+        <td th:text=""><button>C</button></td>
     </tr>
     </tbody>
 </table>
