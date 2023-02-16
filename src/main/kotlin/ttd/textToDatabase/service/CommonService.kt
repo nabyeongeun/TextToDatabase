@@ -4,6 +4,8 @@ import org.springframework.web.multipart.MultipartFile
 
 interface CommonService {
 
-    fun uploadFile(file:MultipartFile?) : Map<String, Any?>;
+    fun initPage() : Map<String,Any>
+
+    fun uploadFile(file:MultipartFile?) : Map<String, Any?>
 
 }

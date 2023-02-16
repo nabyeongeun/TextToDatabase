@@ -1,5 +1,15 @@
 $(document).ready(function() {
     $('#file_input').change(file_attach);
+
+    $.ajax({
+        url: "/initPage.do",
+        success : () => {
+//            alert("SUCCESS")
+        }, error : () => {
+            alert("Page Loading Error");
+        }
+    });
+
 //  $("#add-user-form").submit(function(event) {
 //    event.preventDefault();
 //    var name = $("#name").val();
@@ -34,6 +44,11 @@ function file_attach() {
             data: formData,
             type: 'POST',
             success: (response) => {
+
+                if(response?.status != 'SUCCESS') {
+                    alert(response.statusDescription);
+                    return;
+                }
 
                 fileList.push(response);
 
