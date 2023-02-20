@@ -6,6 +6,6 @@ interface CommonService {
 
     fun initPage() : Map<String,Any>
 
-    fun uploadFile(file:MultipartFile?) : Map<String, Any?>
+    fun uploadFile(filePath:String) : MutableMap<String, Any>
 
 }

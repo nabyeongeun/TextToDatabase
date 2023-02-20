@@ -26,6 +26,9 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 	compileOnly("org.springframework.boot:spring-boot-devtools");
+
+	implementation("org.apache.poi:poi:5.2.0")
+	implementation("org.apache.poi:poi-ooxml:5.2.0")
 }
 
 tasks.withType<KotlinCompile> {
