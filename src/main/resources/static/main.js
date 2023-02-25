@@ -58,13 +58,13 @@ function file_attach() {
                     + '<input type="checkbox">' + '</td><td>'
                     + response.file_name + '</td><td>'
                     + response.file_size + '</td><td>'
-                    + response.data_count + '</td><td>'
+                    + response.row_count + '</td><td>'
                     + response.upload_count + '</td><td>'
                     + "<button onclick=deleteRow('" + response.hash_code + "')> C </button> </td></tr>";
                 $("table tbody").append(newFile);
             },
             error: () => {
-                alert("File upload failed");
+                alert("Invalid File Input");
             }
         });
     }

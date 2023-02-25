@@ -5,15 +5,11 @@ import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.apache.poi.xssf.usermodel.XSSFCell
-import org.apache.poi.xssf.usermodel.XSSFCellStyle
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.math.roundToInt
 
 @Service
 class CommonServiceImpl : CommonService {
@@ -27,38 +23,42 @@ class CommonServiceImpl : CommonService {
 
     override fun uploadFile(filePath:String): MutableMap<String, Any> {
 
-        val returnObject = HashMap<String,Any>()
+        var returnObject : MutableMap<String,Any> = HashMap()
 
-        val ext = filePath.substring(filePath.lastIndexOf("."))
-
-        if(ext.equals(".txt", true)) {
-            readText(filePath)
-        } else if (ext.equals(".xls", true)) {
-            readXls(filePath)
-        } else if (ext.equals(".xlsx", true)) {
-            readXlsx(filePath)
-        } else {
-            returnObject["status"] = "WARNING";
-            returnObject["statusDescription"] = "지원하지 않는 확장자 입니다.";
-            return returnObject
+        when(filePath.substring(filePath.lastIndexOf(".")).lowercase(Locale.getDefault())) {
+            ".txt"  -> returnObject = readText(filePath)
+            ".csv"  -> returnObject = readCsv(filePath)
+            ".xls"  -> returnObject = readXls(filePath)
+            ".xlsx" -> returnObject = readXlsx(filePath)
+            else -> {
+                returnObject["status"] = "WARNING";
+                returnObject["statusDescription"] = "지원하지 않는 확장자 입니다.";
+                return returnObject
+            }
         }
 
-        returnObject["status"] = "SUCCESS"
-        returnObject["data_count"] = 0
+        if(returnObject["status"].toString() != "SUCCESS")
+            return returnObject
+
+        returnObject["row_count"] = returnObject["row_count"].toString()
         returnObject["upload_count"] = 0
 
         return returnObject
     }
 
-    fun readText(filePath:String) {
-
+    fun readText(filePath:String) : MutableMap<String,Any>{
+        return mapOf("status" to "WARNING").toMutableMap()
     }
 
-    fun readXls(filePath:String) {
-
+    fun readCsv(filePath:String) : MutableMap<String,Any>{
+        return mapOf("status" to "WARNING").toMutableMap()
     }
 
-    fun readXlsx(filePath:String) {
+    fun readXls(filePath:String) : MutableMap<String,Any>{
+        return mapOf("status" to "WARNING").toMutableMap()
+    }
+
+    fun readXlsx(filePath:String) : MutableMap<String,Any>{
 
         var workBook : Workbook ?= null
 
@@ -66,7 +66,7 @@ class CommonServiceImpl : CommonService {
             workBook = WorkbookFactory.create(it)
         }
 
-        val sheet = workBook?.getSheetAt(0)
+        val sheet = workBook!!.getSheetAt(0)
 
         val columnList = ArrayList<String>()
 
@@ -74,11 +74,35 @@ class CommonServiceImpl : CommonService {
         val columnCount = sheet?.getRow(0)?.physicalNumberOfCells!!
 
         for(index in 0 until columnCount) {
-            columnList.add(getCellContents(sheet!!, 0, index)!!)
+            columnList.add(getCellContents(sheet, 0, index)!!)
         }
 
-        println(columnList.toString())
-        println(rowCount)
+        columnList.forEach {
+            if(it.matches("^\\d.*".toRegex()))
+                return mapOf("status" to "WARNING", "statusDescription" to "column name should not starts with numeric character ($it)").toMutableMap()
+        }
+
+        // empty cell with format(background color, font-size, etc...) can be recognized not empty cell
+        // trimming row without content
+        var actualRowCount = 0
+        for(i in 1 until rowCount) { // actual row measure
+
+            var blankCheck = ""
+
+            for(j in 0 until columnList.size) {
+                blankCheck += getCellContents(sheet, i, j) ?: ""
+            }
+
+            if(blankCheck != "")
+                actualRowCount += 1
+        }
+
+//        println(columnList.toString())
+
+//        println("rowCount : $rowCount")
+//        println("actualRowCount : $actualRowCount")
+
+        return mapOf("status" to "SUCCESS", "row_count" to actualRowCount).toMutableMap()
 
     }
 
@@ -86,23 +110,21 @@ class CommonServiceImpl : CommonService {
 
         val cell = getCell(sheet, rowIndex, cellIndex)
 
-        if(cell == null)
-            return null
-        else {
-            val type = cell.cellType
+//        println("rowIndex: $rowIndex cellIndex: $cellIndex / ${cell?.cellType.toString()} / $cell")
 
-            if(type == CellType.NUMERIC) {
-                return cell.numericCellValue.toLong().toString()
-            } else if (type == CellType.STRING) {
-                return cell.stringCellValue
+        return if(cell == null)
+            null
+        else {
+            when(cell.cellType) {
+                CellType.STRING  -> cell.stringCellValue
+                CellType.NUMERIC -> cell.numericCellValue.toLong().toString()
+                else -> {null}
             }
         }
-
-        return null
     }
 
     fun getCell(sheet: Sheet, rowIndex: Int, cellIndex: Int) : Cell? {
-        return sheet.getRow(rowIndex)?.getCell(rowIndex)
+        return sheet.getRow(rowIndex)?.getCell(cellIndex)
     }
 
 
