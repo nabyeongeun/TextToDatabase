@@ -20,38 +20,53 @@
     .data-grid th {
       background-color: lightgray;
     }
+
+    div {
+        padding : 5px 0px
+    }
     </style>
 </head>
 <body>
 
-<form id="file_form" method="post" enctype="multipart/form-data"/>
-    <input id="file_input" multiple type="file" accept=".txt,.csv,.xls,.xlsx"/>
-</form>
+<div>
+    <form id="file_form" method="post" enctype="multipart/form-data"/>
+        <input id="file_input" multiple type="file" accept=".txt,.csv,.xls,.xlsx"/>
+    </form>
+</div>
 
-<br>
+<div>
+    <label id="db_info"></label>
+</div>
 
-<table id="userTable" class="data-grid">
-    <thead>
-    <tr>
-        <th style="width:15px"></th> <!-- checkbox -->
-        <th>file name</th>
-        <th>file size</th>
-        <th>data count</th>
-        <th>upload count</th>
-        <th></th> <!-- button -->
-    </tr>
-    </thead>
-    <tbody>
-        <tr th:each="user : ${file}">
-            <td th:text=""><input type="checkbox"></td>
-            <td th:text="${file.file_name}"></td>
-            <td th:text="${file.file_size}"></td>
-            <td th:text="${file.row_count}"></td>
-            <td th:text="${file.upload_count}"></td>
-            <td th:text=""><button>C</button></td>
+<div>
+    <input type="checkbox" id="truncate_yn"> <label for="truncate_yn">truncate before insert</label>
+    <button id="start">Start Import</button>
+</div>
+
+<div>
+    <table id="userTable" class="data-grid">
+        <thead>
+        <tr>
+            <th style="width:15px"></th> <!-- checkbox -->
+            <th>file name</th>
+            <th>file size</th>
+            <th>data count</th>
+            <th>upload count</th>
+            <th></th> <!-- button -->
         </tr>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${file}">
+                <td th:text=""><input type="checkbox"></td>
+                <td th:text="${file.file_name}"></td>
+                <td th:text="${file.file_size}"></td>
+                <td th:text="${file.row_count}"></td>
+                <td th:text="${file.upload_count}"></td>
+                <td th:text=""><button>C</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <script type="text/javascript" src="./jquery-3.6.3.js"></script>
 <script type="text/javascript" src="./main.js"></script>

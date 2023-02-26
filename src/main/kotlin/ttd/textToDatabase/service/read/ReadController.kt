@@ -1,9 +1,7 @@
-package ttd.textToDatabase.service
+package ttd.textToDatabase.service.read
 
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -13,21 +11,10 @@ import java.util.*
 import kotlin.math.roundToInt
 
 @RestController
-class CommonController {
+class ReadController {
 
     @Autowired
-    lateinit var service: CommonService
-
-    @GetMapping("main")
-    fun index(model: Model) : Model {
-        model.addAttribute("data", "hello!!")
-        return model
-    }
-
-    @GetMapping("/initPage.do")
-    fun initPage() : Map<String,Any> {
-        return service.initPage()
-    }
+    lateinit var service: ReadService
 
     @PostMapping("/uploadFile.do")
     fun uploadFile(request : HttpServletRequest, @RequestParam("file") file:MultipartFile) : Map<String,Any?> {

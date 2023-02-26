@@ -1,4 +1,4 @@
-package ttd.textToDatabase.service
+package ttd.textToDatabase.service.common
 
 import org.springframework.web.multipart.MultipartFile
 

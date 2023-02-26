@@ -7,7 +7,7 @@ plugins {
 	kotlin("plugin.spring") version "1.7.22"
 }
 
-group = "wowrld"
+group = "nabyeongeun"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -22,13 +22,15 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1")
-	runtimeOnly("com.oracle.database.jdbc:ojdbc8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-	compileOnly("org.springframework.boot:spring-boot-devtools");
+	compileOnly("org.springframework.boot:spring-boot-devtools")
 
 	implementation("org.apache.poi:poi:5.2.0")
 	implementation("org.apache.poi:poi-ooxml:5.2.0")
+
+	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1")
+	runtimeOnly("com.oracle.database.jdbc:ojdbc8")
 }
 
 tasks.withType<KotlinCompile> {

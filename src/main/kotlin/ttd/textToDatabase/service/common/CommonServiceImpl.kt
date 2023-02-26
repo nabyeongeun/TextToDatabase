@@ -1,22 +1,42 @@
-package ttd.textToDatabase.service
+package ttd.textToDatabase.service.common
 
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
+import java.sql.Connection
 import java.util.*
 import kotlin.collections.HashMap
 
 @Service
 class CommonServiceImpl : CommonService {
+
+    @Autowired
+    lateinit var jdbcTemplate : JdbcTemplate
+
+    @Autowired
+    lateinit var mapper : CommonMapper
+
+
     override fun initPage(): Map<String,Any> {
 
         val returnObject : MutableMap<String,Any> = HashMap()
-        returnObject["status"] = "SUCCESS"
+
+        jdbcTemplate.dataSource!!.connection.use {
+            val metaData = it.metaData
+            val url = metaData.url
+            val productName = metaData.databaseProductName
+
+            returnObject["status"] = "SUCCESS"
+            returnObject["url"] = url
+            returnObject["productName"] = productName
+        }
 
         return returnObject
     }
@@ -31,8 +51,8 @@ class CommonServiceImpl : CommonService {
             ".xls"  -> returnObject = readXls(filePath)
             ".xlsx" -> returnObject = readXlsx(filePath)
             else -> {
-                returnObject["status"] = "WARNING";
-                returnObject["statusDescription"] = "지원하지 않는 확장자 입니다.";
+                returnObject["status"] = "WARNING"
+                returnObject["statusDescription"] = "지원하지 않는 확장자 입니다."
                 return returnObject
             }
         }
@@ -60,7 +80,7 @@ class CommonServiceImpl : CommonService {
 
     fun readXlsx(filePath:String) : MutableMap<String,Any>{
 
-        var workBook : Workbook ?= null
+        var workBook : Workbook ?
 
         FileInputStream(File(filePath)).use{
             workBook = WorkbookFactory.create(it)
@@ -71,7 +91,7 @@ class CommonServiceImpl : CommonService {
         val columnList = ArrayList<String>()
 
         val rowCount = sheet?.physicalNumberOfRows!!
-        val columnCount = sheet?.getRow(0)?.physicalNumberOfCells!!
+        val columnCount = sheet.getRow(0)?.physicalNumberOfCells!!
 
         for(index in 0 until columnCount) {
             columnList.add(getCellContents(sheet, 0, index)!!)
@@ -82,7 +102,7 @@ class CommonServiceImpl : CommonService {
                 return mapOf("status" to "WARNING", "statusDescription" to "column name should not starts with numeric character ($it)").toMutableMap()
         }
 
-        // empty cell with format(background color, font-size, etc...) can be recognized not empty cell
+        // empty cell with format(background color, font-size, etc...) can be recognized as not empty cell
         // trimming row without content
         var actualRowCount = 0
         for(i in 1 until rowCount) { // actual row measure
@@ -96,11 +116,6 @@ class CommonServiceImpl : CommonService {
             if(blankCheck != "")
                 actualRowCount += 1
         }
-
-//        println(columnList.toString())
-
-//        println("rowCount : $rowCount")
-//        println("actualRowCount : $actualRowCount")
 
         return mapOf("status" to "SUCCESS", "row_count" to actualRowCount).toMutableMap()
 

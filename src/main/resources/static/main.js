@@ -3,29 +3,15 @@ $(document).ready(function() {
 
     $.ajax({
         url: "/initPage.do",
-        success : () => {
-//            alert("SUCCESS")
+        success : (obj) => {
+            if(obj.status == "SUCCESS")
+                $("#db_info").html("connection info : " + obj.url + "<br>database product : " + obj.productName);
+            else
+                alert("Page Loading Error");
         }, error : () => {
             alert("Page Loading Error");
         }
     });
-
-//  $("#add-user-form").submit(function(event) {
-//    event.preventDefault();
-//    var name = $("#name").val();
-//    var age = $("#age").val();
-//    var city = $("#city").val();
-//
-//    $.ajax({
-//      type: "POST",
-//      url: "/addUser",
-//      data: { name: name, age: age, city: city },
-//      success: function(response) {
-//        var newUser = '<tr><td>' + name + '</td><td>' + age + '</td><td>' + city + '</td></tr>';
-//        $("table tbody").append(newUser);
-//      }
-//    });
-//  });
 });
 
 let fileList = [];
@@ -54,16 +40,15 @@ function file_attach() {
 
 //                console.log(fileList);
 
-                var newFile = '<tr id="' + response.hash_code + '"><td>'
+                var newFile = '<tr id="' + response.file_id + '"><td>'
                     + '<input type="checkbox">' + '</td><td>'
                     + response.file_name + '</td><td>'
                     + response.file_size + '</td><td>'
                     + response.row_count + '</td><td>'
                     + response.upload_count + '</td><td>'
-                    + "<button onclick=deleteRow('" + response.hash_code + "')> C </button> </td></tr>";
+                    + "<button onclick=deleteRow('" + response.file_id + "')> C </button> </td></tr>";
                 $("table tbody").append(newFile);
-            },
-            error: () => {
+            }, error: () => {
                 alert("Invalid File Input");
             }
         });
@@ -74,9 +59,9 @@ function deleteRow(id) {
 
     for(let i in fileList) {
 
-        if(fileList[i].hash_code == id) {
+        if(fileList[i].file_id == id) {
             fileList.splice(i, 1);
-            console.log('$("#'+id+'").remove()');
+//            console.log('$("#'+id+'").remove()');
             $('#'+id).remove();
         }
     }
