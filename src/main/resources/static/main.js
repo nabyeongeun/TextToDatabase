@@ -1,11 +1,12 @@
 $(document).ready(function() {
     $('#file_input').change(file_attach);
+    $('#date_format').val('YYYY/MM/DD HH24:MI:SS');
 
     $.ajax({
         url: "/initPage.do",
         success : (obj) => {
             if(obj.status == "SUCCESS")
-                $("#db_info").html("connection info : " + obj.url + "<br>database product : " + obj.productName);
+                $("#db_info").html("connection : " + obj.url + "<br>username : " + obj.username + "<br>database product : " + obj.productName);
             else
                 alert("Page Loading Error");
         }, error : () => {
@@ -40,13 +41,13 @@ function file_attach() {
 
 //                console.log(fileList);
 
-                var newFile = '<tr id="' + response.file_id + '"><td>'
-                    + '<input type="checkbox">' + '</td><td>'
-                    + response.file_name + '</td><td>'
-                    + response.file_size + '</td><td>'
-                    + response.row_count + '</td><td>'
-                    + response.upload_count + '</td><td>'
-                    + "<button onclick=deleteRow('" + response.file_id + "')> C </button> </td></tr>";
+                var newFile = "<tr id='" + response.file_id + "'>" +
+//                    "<td><input type='checkbox'></td>" +
+                    "<td>" + response.file_name + "</td>" +
+                    "<td>" + response.file_size + "</td>" +
+                    "<td>" + response.row_count + "</td>" +
+                    "<td>" + response.table_data_count + "</td>" +
+                    "<td><button onclick=deleteRow('" + response.file_id + "')> C </button> </td></tr>";
                 $("table tbody").append(newFile);
             }, error: () => {
                 alert("Invalid File Input");
@@ -65,5 +66,41 @@ function deleteRow(id) {
             $('#'+id).remove();
         }
     }
+
+}
+
+function start() {
+
+//    let truncate_yn = $('#truncate_yn').is(':checked');
+
+    let tableList = ""
+
+    for(let i in fileList) {
+
+        let fileName = fileList[i].file_name.substr(0, fileList[i].file_name.indexOf("."))
+
+        if(i == 0)
+            tableList = fileName
+        else
+            tableList += "," + fileName
+    }
+
+    if(tableList == "") {
+        alert("list is empty")
+        return
+    }
+
+    $.ajax({
+        url: "/preInsert.do",
+        type: "GET",
+        dataType: "json",
+        data: {"tableList" : tableList},
+        success : (obj) => {
+            if(obj.status == "SUCCESS")
+                alert("good")
+            else
+                alert(obj.description);
+        }
+    });
 
 }

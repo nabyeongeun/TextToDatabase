@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="common.commonMapper">
+<mapper namespace="ttd.textToDatabase.service.insert.InsertMapper">
+
+    <delete id="truncate" parameterType="java.lang.String">
+        TRUNCATE TABLE ${value}
+    </delete>
+
+    <select id="isTableExist" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(1) FROM USER_TAB_COLUMNS WHERE TABLE_NAME = #{value}
+    </select>
 
     <insert id="insert" parameterType="java.util.Map">
         INSERT INTO ${tableName} <foreach collection="keyList" open="(" index="item" close=")" separator=",">${item}</foreach>

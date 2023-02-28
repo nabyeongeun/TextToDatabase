@@ -17,7 +17,7 @@ class ReadController {
     lateinit var service: ReadService
 
     @PostMapping("/uploadFile.do")
-    fun uploadFile(request : HttpServletRequest, @RequestParam("file") file:MultipartFile) : Map<String,Any?> {
+    fun uploadFile(request : HttpServletRequest, @RequestParam("file") file:MultipartFile) : Map<String,Any> {
 
         var saveFile :File ?= null
         var returnObject : MutableMap<String,Any> ?= null
@@ -26,20 +26,19 @@ class ReadController {
             val dir = File(request.servletContext.getRealPath("/Upload"))
             if (!dir.isDirectory)
                 dir.mkdirs()
-            println(dir)
 
             var fileName = file.originalFilename!!
-            val fileNameOnly = fileName.substring(0, fileName.lastIndexOf("."))
+            val tableName = fileName.substring(0, fileName.lastIndexOf("."))
             val fileExt = fileName.substring(fileName.lastIndexOf("."))
 
             val fileId = UUID.randomUUID().toString().replace(Regex("-"), "")
 
-            saveFile = File(dir.toString() + System.getProperty("file.separator") + fileNameOnly + "_" + fileId + fileExt)
+            saveFile = File(dir.toString() + System.getProperty("file.separator") + tableName + "_" + fileId + fileExt)
             file.transferTo(saveFile)
 
-            println(dir.toString() + System.getProperty("file.separator") + fileNameOnly + "_" + fileId + fileExt)
+            println(dir.toString() + System.getProperty("file.separator") + tableName + "_" + fileId + fileExt)
 
-            returnObject = service.uploadFile(dir.toString() + System.getProperty("file.separator") + fileNameOnly + "_" + fileId + fileExt)
+            returnObject = service.uploadFile(tableName, dir.toString() + System.getProperty("file.separator") + tableName + "_" + fileId + fileExt)
 
             if(returnObject["status"].toString() == "SUCCESS") {
                 returnObject["file_name"] = fileName

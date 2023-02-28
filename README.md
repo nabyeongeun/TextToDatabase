@@ -1,5 +1,5 @@
 # TextToDatabase 
-insert txt, csv, xls, xlsx data into database  
+insert txt, csv, xlsx data into database  
   
 사용법  
   
@@ -13,11 +13,3 @@ add files to import on page.
 file name without extension will be table name.  
 target table should be created manually before start import.  
 
-
-
-
-this project was built on below settings  
-openjdk-17.0.3  
-Kotlin 1.7.22
-springboot 3.0.1  
-IntelliJ IDEA 2022.3.1  

@@ -30,7 +30,7 @@
 
 <div>
     <form id="file_form" method="post" enctype="multipart/form-data"/>
-        <input id="file_input" multiple type="file" accept=".txt,.csv,.xls,.xlsx"/>
+        <input id="file_input" multiple type="file" accept=".txt,.csv,.xlsx"/>
     </form>
 </div>
 
@@ -39,25 +39,26 @@
 </div>
 
 <div>
-    <input type="checkbox" id="truncate_yn"> <label for="truncate_yn">truncate before insert</label>
-    <button id="start">Start Import</button>
+    <input type="checkbox" id="truncate_yn" checked> <label for="truncate_yn">truncate before insert</label><br>
+    <label for="date_format">DATE_FORMAT</label> <input type="text" id="date_format" placeholder="YYYY/MM/DD HH24:MI:SS"><br>
+    <button id="start" onclick="start()">Start Import</button>
 </div>
 
 <div>
     <table id="userTable" class="data-grid">
         <thead>
         <tr>
-            <th style="width:15px"></th> <!-- checkbox -->
+<!--            <th style="width:15px"></th> &lt;!&ndash; checkbox &ndash;&gt;-->
             <th>file name</th>
             <th>file size</th>
             <th>data count</th>
-            <th>upload count</th>
+            <th>table_data_count</th>
             <th></th> <!-- button -->
         </tr>
         </thead>
         <tbody>
             <tr th:each="user : ${file}">
-                <td th:text=""><input type="checkbox"></td>
+<!--                <td th:text=""><input type="checkbox"></td>-->
                 <td th:text="${file.file_name}"></td>
                 <td th:text="${file.file_size}"></td>
                 <td th:text="${file.row_count}"></td>

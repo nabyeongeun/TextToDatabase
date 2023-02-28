@@ -1,16 +1,12 @@
 package ttd.textToDatabase.service.read
 
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.CellType
-import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
+import ttd.textToDatabase.common.Xlsx
 import java.io.File
 import java.io.FileInputStream
-import java.sql.Connection
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -18,37 +14,19 @@ import kotlin.collections.HashMap
 class ReadServiceImpl : ReadService {
 
     @Autowired
-    lateinit var jdbcTemplate : JdbcTemplate
+    lateinit var mapper : ReadMapper
 
-    override fun initPage(): Map<String,Any> {
-
-        val returnObject : MutableMap<String,Any> = HashMap()
-
-        jdbcTemplate.dataSource!!.connection.use {
-            val metaData = it.metaData
-            val url = metaData.url
-            val productName = metaData.databaseProductName
-
-            returnObject["status"] = "SUCCESS"
-            returnObject["url"] = url
-            returnObject["productName"] = productName
-        }
-
-        return returnObject
-    }
-
-    override fun uploadFile(filePath:String): MutableMap<String, Any> {
+    override fun uploadFile(tableName:String, filePath:String): MutableMap<String, Any> {
 
         var returnObject : MutableMap<String,Any> = HashMap()
 
         when(filePath.substring(filePath.lastIndexOf(".")).lowercase(Locale.getDefault())) {
             ".txt"  -> returnObject = readText(filePath)
             ".csv"  -> returnObject = readCsv(filePath)
-            ".xls"  -> returnObject = readXls(filePath)
             ".xlsx" -> returnObject = readXlsx(filePath)
             else -> {
                 returnObject["status"] = "WARNING"
-                returnObject["statusDescription"] = "지원하지 않는 확장자 입니다."
+                returnObject["statusDescription"] = "unsupported file extension"
                 return returnObject
             }
         }
@@ -57,7 +35,7 @@ class ReadServiceImpl : ReadService {
             return returnObject
 
         returnObject["row_count"] = returnObject["row_count"].toString()
-        returnObject["upload_count"] = 0
+        returnObject["table_data_count"] = if(mapper.isTableExist(tableName.uppercase()) > 0) mapper.tableDataCount(tableName.uppercase()) else "table not found"
 
         return returnObject
     }
@@ -67,10 +45,6 @@ class ReadServiceImpl : ReadService {
     }
 
     fun readCsv(filePath:String) : MutableMap<String,Any>{
-        return mapOf("status" to "WARNING").toMutableMap()
-    }
-
-    fun readXls(filePath:String) : MutableMap<String,Any>{
         return mapOf("status" to "WARNING").toMutableMap()
     }
 
@@ -90,7 +64,7 @@ class ReadServiceImpl : ReadService {
         val columnCount = sheet.getRow(0)?.physicalNumberOfCells!!
 
         for(index in 0 until columnCount) {
-            columnList.add(getCellContents(sheet, 0, index)!!)
+            columnList.add(Xlsx.getCellContents(sheet, 0, index)!!)
         }
 
         columnList.forEach {
@@ -106,7 +80,7 @@ class ReadServiceImpl : ReadService {
             var blankCheck = ""
 
             for(j in 0 until columnList.size) {
-                blankCheck += getCellContents(sheet, i, j) ?: ""
+                blankCheck += Xlsx.getCellContents(sheet, i, j) ?: ""
             }
 
             if(blankCheck != "")
@@ -117,26 +91,7 @@ class ReadServiceImpl : ReadService {
 
     }
 
-    fun getCellContents(sheet: Sheet, rowIndex: Int, cellIndex: Int) : String? {
 
-        val cell = getCell(sheet, rowIndex, cellIndex)
-
-//        println("rowIndex: $rowIndex cellIndex: $cellIndex / ${cell?.cellType.toString()} / $cell")
-
-        return if(cell == null)
-            null
-        else {
-            when(cell.cellType) {
-                CellType.STRING  -> cell.stringCellValue
-                CellType.NUMERIC -> cell.numericCellValue.toLong().toString()
-                else -> {null}
-            }
-        }
-    }
-
-    fun getCell(sheet: Sheet, rowIndex: Int, cellIndex: Int) : Cell? {
-        return sheet.getRow(rowIndex)?.getCell(cellIndex)
-    }
 
 
 

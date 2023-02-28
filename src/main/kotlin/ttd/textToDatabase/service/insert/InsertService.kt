@@ -1,4 +1,8 @@
 package ttd.textToDatabase.service.insert
 
-class InsertService {
+interface InsertService{
+
+    fun insertFile(filePath:String) : MutableMap<String, Any>
+
+
 }
