@@ -2,7 +2,7 @@ spring:
   dataSource:
     url: jdbc:oracle:thin:@localhost:1521:orcl
     username: scott
-    password: 1234
+    password: 12345
     driver-class-name: oracle.jdbc.driver.OracleDriver
     tomcat:
       initial-size: 10
